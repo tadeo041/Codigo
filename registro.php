@@ -2,7 +2,7 @@
 // Configuración de la base de datos
 $servername = "localhost"; // Cambia si es necesario
 $username = "root"; // Tu usuario de MySQL
-$password = ""; // Tu contraseña de MySQL
+$password = "manuel123"; // Tu contraseña de MySQL
 $dbname = "registro_db";
 
 // Crear conexión

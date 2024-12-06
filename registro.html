@@ -7,19 +7,57 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <?php
+    // Configuración de conexión a la base de datos
+    $host = "localhost";
+    $dbname = "tienda"; // Nombre de la base de datos
+    $username = "root"; // Usuario de la base de datos
+    $password = "";     // Contraseña de la base de datos
+
+    try {
+        // Crear la conexión
+        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Obtener datos del formulario
+            $nombre = htmlspecialchars($_POST['nombre']);
+            $email = htmlspecialchars($_POST['email']);
+            $passwordInput = htmlspecialchars($_POST['password']);
+
+            // Encriptar contraseña
+            $passwordHash = password_hash($passwordInput, PASSWORD_BCRYPT);
+
+            // Insertar datos en la tabla
+            $sql = "INSERT INTO registro (nombre, email, password) VALUES (:nombre, :email, :password)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $passwordHash);
+            $stmt->execute();
+
+            // Redirigir a la página de descripción de perros
+            echo "<script>window.location.href = 'descripcionPerros.html';</script>";
+            exit();
+        }
+    } catch (PDOException $e) {
+        echo "<div class='error'>Error: " . $e->getMessage() . "</div>";
+    }
+    ?>
+
     <div class="container">
-        <h1>Registro de Usuario</h1>
-        <form action="registro.php" method="POST">
+        <h1>Registro</h1>
+        <form action="" method="post">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" required>
 
-            <label for="email">Email:</label>
+            <label for="email">Correo electrónico:</label>
             <input type="email" id="email" name="email" required>
 
-            <label for="contrasena">Contraseña:</label>
-            <input type="password" id="contrasena" name="contrasena" required>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
 
-            <button type="submit">Registrar</button>
+            <button type="submit">Registrarse</button>
         </form>
     </div>
 </body>
